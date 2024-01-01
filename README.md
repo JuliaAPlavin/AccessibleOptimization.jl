@@ -52,7 +52,7 @@ See also [a walkthrough, with more examples and details](https://aplavin.github.
 
 The optimization part is directly delegated to `Optimization`. Other backends are possible, but best to add them as methods to `Optimization` proper and use from `AccessibleOptimization`.
 
-These packages have generally similar goals, but neither provides all features `AccessibleOptimization` does:
+These packages have generally similar goals, but neither provides all features `AccessibleOptimization` or `Accessors` do:
 - [Functors.jl](https://github.com/FluxML/Functors.jl)
 - [FlexibleFunctors.jl](https://github.com/Metalenz/FlexibleFunctors.jl)
 - [ModelParameters.jl](https://github.com/rafaqz/ModelParameters.jl)
