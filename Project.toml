@@ -1,0 +1,19 @@
+name = "AccessibleOptimization"
+uuid = "d88a00a0-4a21-4fe4-a515-e2123c37b885"
+authors = ["Alexander Plavin <alexander@plav.in>"]
+version = "0.1.0"
+
+[deps]
+AccessorsExtra = "33016aad-b69d-45be-9359-82a41f556fd4"
+ConstructionBase = "187b0558-2788-49d3-abe0-74a17ed4e7c9"
+DataPipes = "02685ad9-2d12-40c3-9f73-c6aeda6a7ff5"
+Optimization = "7f7a1694-90dd-40f0-9382-eb1efda571ba"
+Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
+
+[compat]
+AccessorsExtra = "0.1.43"
+ConstructionBase = "1.5.1"
+DataPipes = "0.3.5"
+Optimization = "3"
+Reexport = "1.2.2"
+julia = "1.6"
