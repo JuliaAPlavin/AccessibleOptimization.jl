@@ -35,8 +35,8 @@ using AccessibleOptimization
 
 # which parameters to optimize, what are their bouds?
 vars = OptArgs(
-	@optic(_.comps[∗].shift) => 0..10.,  # shifts of both components: values from 0..10
-	@optic(log10(_.comps[∗].scale)) => -1..1,  # component scales: positive-only (using log10 transformation), from 10^-1 to 10^1
+	(@o _.comps[∗].shift) => 0..10.,  # shifts of both components: values from 0..10
+	(@o log10(_.comps[∗].scale)) => -1..1,  # component scales: positive-only (using log10 transformation), from 10^-1 to 10^1
 )
 # create and solve the optimization problem, interface very similar to Optimization.jl
 ops = OptProblemSpec(Base.Fix2(loss, data), mod0, vars)
