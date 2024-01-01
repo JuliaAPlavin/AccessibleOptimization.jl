@@ -27,7 +27,7 @@ _intbound((o, i)::Pair) = i
 _intbound(o) = nothing
 optic(v::OptArgs) = AccessorsExtra.ConcatOptics(map(_optic, v.specs))
 
-rawu(x, v::OptArgs) = getall(x, optic(v))
+rawu(x0, v::OptArgs) = getall(x0, optic(v))
 fromrawu(u, x0, v::OptArgs) = setall(x0, optic(v), u)
 rawfunc(f, x0, v::OptArgs) = (u, p) -> f(fromrawu(u, x0, v), p)
 rawbounds(x0, v::OptArgs, AT=nothing) =
