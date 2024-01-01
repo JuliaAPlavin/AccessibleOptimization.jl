@@ -54,7 +54,7 @@ The optimization part is directly delegated to `Optimization`. Other backends ar
 
 These packages have generally similar goals, but neither provides all features `AccessibleOptimization` does:
 - [Functors.jl](https://github.com/FluxML/Functors.jl)
-- [FlexibleFunctors.jl]([FlexibleFunctors.jl](https://github.com/Metalenz/FlexibleFunctors.jl))
+- [FlexibleFunctors.jl](https://github.com/Metalenz/FlexibleFunctors.jl)
 - [ModelParameters.jl](https://github.com/rafaqz/ModelParameters.jl)
 - [ParameterHandling.jl](https://github.com/JuliaGaussianProcesses/ParameterHandling.jl)
 - [ValueShapes.jl](https://github.com/oschulz/ValueShapes.jl)
