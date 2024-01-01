@@ -35,16 +35,17 @@ using AccessibleOptimization
 
 # which parameters to optimize, what are their bouds?
 vars = OptArgs(
-	@optic(_.comps[∗].shift) => 0..10.,  # shifts of both components: values from 0..10
-	@optic(log10(_.comps[∗].scale)) => -1..1,  # component scales: positive-only (using log10 transformation), from 10^-1 to 10^1
+	(@o _.comps[∗].shift) => 0..10.,  # shifts of both components: values from 0..10
+	(@o log10(_.comps[∗].scale)) => -1..1,  # component scales: positive-only (using log10 transformation), from 10^-1 to 10^1
 )
 # create and solve the optimization problem, interface very similar to Optimization.jl
 ops = OptProblemSpec(Base.Fix2(loss, data), mod0, vars)
 sol = solve(ops, ECA(), maxiters=300)
 sol.uobj::SumModel  # the optimal model
 ```
+We use [Accessors.jl](https://github.com/JuliaObjects/Accessors.jl) and [AccessorsExtra.jl](https://gitlab.com/aplavin/AccessorsExtra.jl) optics to specify parameters to vary during optimization. Basic `@optic` syntax demonstrated in the above example includes property and index access (`_.prop`, `_[1]`) and selecting all elements of a collection with `_[∗]` (type with `\ast<tab>`). Refer to the `Accessors[Extra]` documentation for more details.
 
-See also [a walkthrough, with more examples and details](https://aplavin.github.io/AccessibleOptimization.jl/examples/notebook.html).
+See a Pluto notebook with [a walkthrough, more examples and explanations](https://aplavin.github.io/AccessibleOptimization.jl/examples/notebook.html).
 
 # Related packages
 
