@@ -13,6 +13,8 @@ env:
   SSH_AUTH_SOCK: /tmp/ssh_agent.sock
   PYTHON:
 
+permissions:
+    contents: write
 jobs:
     build-and-deploy:
         timeout-minutes: 30
