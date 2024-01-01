@@ -4,7 +4,6 @@ using TestItemRunner
 
 
 @testitem "constructorof" begin
-    using OptimizationOptimJL  # just to load ForwardDiff, will remove when Optimization updates
     of = OptimizationFunction(sin, Optimization.AutoForwardDiff())
     @test constructorof(typeof(of))(Accessors.getfields(of)...) === of
 end
