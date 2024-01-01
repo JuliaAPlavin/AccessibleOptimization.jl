@@ -35,8 +35,8 @@ using AccessibleOptimization
 
 # which parameters to optimize, what are their bouds?
 vars = OptArgs(
-	@optic(_.comps[∗].shift) => 0..10.,
-	@optic(_.comps[∗].scale) => 0.3..10.,
+	@optic(_.comps[∗].shift) => 0..10.,  # shifts of both components: values from 0..10
+	@optic(log10(_.comps[∗].scale)) => -1..1,  # component scales: positive-only (using log10 transformation), from 10^-1 to 10^1
 )
 # create and solve the optimization problem, interface very similar to Optimization.jl
 ops = OptProblemSpec(Base.Fix2(loss, data), mod0, vars)
@@ -55,7 +55,8 @@ The optimization part is directly delegated to `Optimization`. Other backends ar
 These packages have generally similar goals, but neither provides all features `AccessibleOptimization` or `Accessors` do:
 - [Functors.jl](https://github.com/FluxML/Functors.jl)
 - [FlexibleFunctors.jl](https://github.com/Metalenz/FlexibleFunctors.jl)
+- [GModelFit.jl](https://github.com/gcalderone/GModelFit.jl)
 - [ModelParameters.jl](https://github.com/rafaqz/ModelParameters.jl)
 - [ParameterHandling.jl](https://github.com/JuliaGaussianProcesses/ParameterHandling.jl)
-- [ValueShapes.jl](https://github.com/oschulz/ValueShapes.jl)
 - [TransformVariables.jl](https://github.com/tpapp/TransformVariables.jl)
+- [ValueShapes.jl](https://github.com/oschulz/ValueShapes.jl)
