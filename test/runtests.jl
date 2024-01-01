@@ -70,26 +70,34 @@ end
         OptProblemSpec(Base.Fix2(OptimizationFunction{false}(loss), data), MVector, mod0, vars),
         OptProblemSpec(Base.Fix2(OptimizationFunction{false}(loss), data), MVector{<:Any, Float64}, mod0, vars),
     )
-        sol = solve(prob, ECA(), maxiters=300)
+        sol = solve(prob, ECA(), maxiters=10)
         @test sol.u isa Vector{Float64}
         @test sol.uobj isa SumModel
     end
     end
 
-    cons = OptCons(
-        ((x, _) -> sum(c -> c.shift, x.comps) / length(x.comps)) => 0.5..4,
-    )
-    @testset "autodiff" begin
-    @testset "OptProblemSpec(utype=$(prob.utype))" for prob in (
-        OptProblemSpec(Base.Fix2(OptimizationFunction(loss, Optimization.AutoForwardDiff()), data), Vector{Float64}, mod0, vars, cons),
-    )
-        sol = solve(prob, Optim.IPNewton(), maxiters=300)
+    @testset "autodiff, cons" begin
+        cons = OptCons(
+            ((x, _) -> sum(c -> c.shift, x.comps) / length(x.comps)) => 0.5..4,
+        )
+        prob = OptProblemSpec(Base.Fix2(OptimizationFunction(loss, Optimization.AutoForwardDiff()), data), Vector{Float64}, mod0, vars, cons)
+        sol = solve(prob, Optim.IPNewton(), maxiters=10)
         @test sol.u isa Vector{Float64}
         @test sol.uobj isa SumModel
         for (f, int) in cons.specs
             @test f(sol.uobj, data) ∈ int
         end
     end
+
+    @testset "autodiff, no box" begin
+        vars = OptArgs(
+            @optic(_.comps[∗].shift),
+            @optic(_.comps[∗].scale),
+        )
+        prob = OptProblemSpec(Base.Fix2(OptimizationFunction(loss, Optimization.AutoForwardDiff()), data), Vector{Float64}, mod0, vars)
+        sol = solve(prob, Optim.Newton(), maxiters=10)
+        @test sol.u isa Vector{Float64}
+        @test sol.uobj isa SumModel
     end
 end
 

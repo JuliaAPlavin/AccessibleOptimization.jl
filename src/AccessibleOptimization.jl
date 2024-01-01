@@ -21,16 +21,27 @@ struct OptArgs{TS}
     OptArgs(specs...) = new{typeof(specs)}(specs)
 end
 
-optic(v::OptArgs) = AccessorsExtra.ConcatOptics(map(first, v.specs))
+_optic((o, i)::Pair) = o
+_optic(o) = o
+_intbound((o, i)::Pair) = i
+_intbound(o) = nothing
+optic(v::OptArgs) = AccessorsExtra.ConcatOptics(map(_optic, v.specs))
+
 rawu(x, v::OptArgs) = getall(x, optic(v))
 fromrawu(u, x0, v::OptArgs) = setall(x0, optic(v), u)
 rawfunc(f, x0, v::OptArgs) = (u, p) -> f(fromrawu(u, x0, v), p)
-rawbounds(x0, v::OptArgs, AT=nothing) = @p let
-    v.specs
-    map(fill(_[2], length(getall(x0, _[1]))))
-    reduce(vcat)
-    (lb=_convert(AT, minimum.(__)), ub=_convert(AT, maximum.(__)))
-end
+rawbounds(x0, v::OptArgs, AT=nothing) =
+    if @p v.specs |> any(isnothing(_intbound(_)))
+        @assert @p v.specs |> all(isnothing(_intbound(_)))
+        return ()
+    else
+        @p let
+            v.specs
+            map(fill(_intbound(_), length(getall(x0, _optic(_)))))
+            reduce(vcat)
+            (lb=_convert(AT, minimum.(__)), ub=_convert(AT, maximum.(__)))
+        end
+    end
 
 
 struct OptCons{TC,TS}
