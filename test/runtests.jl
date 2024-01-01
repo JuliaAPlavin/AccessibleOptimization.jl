@@ -76,7 +76,36 @@ end
     end
     end
 
+    @testset "construct" begin
+        vars = OptArgs(
+            @optic(_.scale) => 0.3..10.,
+            @optic(_.shift) => 0..10.,
+        )
+        @testset "OptProblemSpec(utype=$(prob.utype))" for prob in (
+            OptProblemSpec(Base.Fix2(loss, data), Vector, ExpModel, vars),
+            OptProblemSpec(Base.Fix2(loss, data), Vector{Float64}, ExpModel, vars),
+            OptProblemSpec(Base.Fix2(loss, data), SVector, ExpModel, vars),
+            OptProblemSpec(Base.Fix2(loss, data), SVector{<:Any, Float64}, ExpModel, vars),
+            OptProblemSpec(Base.Fix2(loss, data), MVector, ExpModel, vars),
+            OptProblemSpec(Base.Fix2(loss, data), MVector{<:Any, Float64}, ExpModel, vars),
+            OptProblemSpec(Base.Fix2(OptimizationFunction{false}(loss), data), Vector, ExpModel, vars),
+            OptProblemSpec(Base.Fix2(OptimizationFunction{false}(loss), data), Vector{Float64}, ExpModel, vars),
+            OptProblemSpec(Base.Fix2(OptimizationFunction{false}(loss), data), SVector, ExpModel, vars),
+            OptProblemSpec(Base.Fix2(OptimizationFunction{false}(loss), data), SVector{<:Any, Float64}, ExpModel, vars),
+            OptProblemSpec(Base.Fix2(OptimizationFunction{false}(loss), data), MVector, ExpModel, vars),
+            OptProblemSpec(Base.Fix2(OptimizationFunction{false}(loss), data), MVector{<:Any, Float64}, ExpModel, vars),
+        )
+            sol = solve(prob, ECA(), maxiters=10)
+            @test sol.u isa Vector{Float64}
+            @test sol.uobj isa ExpModel
+        end
+    end
+
     @testset "autodiff, cons" begin
+        vars = OptArgs(
+            @optic(_.comps[∗].shift) => 0..10.,
+            @optic(_.comps[∗].scale) => 0.3..10.,
+        )
         cons = OptCons(
             ((x, _) -> sum(c -> c.shift, x.comps) / length(x.comps)) => 0.5..4,
         )

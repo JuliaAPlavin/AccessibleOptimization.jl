@@ -5,6 +5,7 @@ using Reexport
 @reexport using AccessorsExtra
 using DataPipes
 using ConstructionBase
+using Statistics: mean
 
 export OptArgs, OptCons, OptProblemSpec, solobj
 
@@ -39,6 +40,20 @@ rawbounds(x0, v::OptArgs, AT=nothing) =
             v.specs
             map(fill(_intbound(_), length(getall(x0, _optic(_)))))
             reduce(vcat)
+            (lb=_convert(AT, minimum.(__)), ub=_convert(AT, maximum.(__)))
+        end
+    end
+
+rawu(x0::Type, v::OptArgs) = @p v.specs |> map(_intbound) |> map(mean)
+fromrawu(u, x0::Type, v::OptArgs) = @p map(_optic(_1) => _2, v.specs, u) |> construct(x0, __...)
+rawbounds(x0::Type, v::OptArgs, AT=nothing) =
+    if @p v.specs |> any(isnothing(_intbound(_)))
+        @assert @p v.specs |> all(isnothing(_intbound(_)))
+        return ()
+    else
+        @p let
+            v.specs
+            map(_intbound(_))
             (lb=_convert(AT, minimum.(__)), ub=_convert(AT, maximum.(__)))
         end
     end
