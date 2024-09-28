@@ -4,7 +4,7 @@ using TestItemRunner
 
 
 @testitem "constructorof" begin
-    of = OptimizationFunction(sin, Optimization.AutoForwardDiff())
+    of = OptimizationFunction((u, _) -> sin(u), Optimization.AutoForwardDiff())
     @test constructorof(typeof(of))(Accessors.getfields(of)...) === of
 end
 
