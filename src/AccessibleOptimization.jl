@@ -4,6 +4,7 @@ using Reexport
 @reexport using Optimization
 @reexport using AccessorsExtra
 using DataPipes
+using FlexiMaps
 using ConstructionBase
 using Statistics: mean
 
@@ -29,8 +30,12 @@ _intbound(o) = nothing
 optic(v::OptArgs) = AccessorsExtra.ConcatOptics(map(_optic, v.specs))
 
 rawu(x0, v::OptArgs) = getall(x0, optic(v))
-fromrawu(u, x0, v::OptArgs) = setall(x0, optic(v), u)
+rawu(x0::Type, v::OptArgs) = @p v.specs |> map(_intbound) |> map(mean)
+
+fromrawu(u, x0, v::OptArgs) = AccessorsExtra.setall_or_construct(x0, optic(v), u)
+
 rawfunc(f, x0, v::OptArgs) = (u, p) -> f(fromrawu(u, x0, v), p)
+
 rawbounds(x0, v::OptArgs, AT=nothing) =
     if @p v.specs |> any(isnothing(_intbound(_)))
         @assert @p v.specs |> all(isnothing(_intbound(_)))
@@ -38,22 +43,7 @@ rawbounds(x0, v::OptArgs, AT=nothing) =
     else
         @p let
             v.specs
-            map(fill(_intbound(_), length(getall(x0, _optic(_)))))
-            reduce(vcat)
-            (lb=_convert(AT, minimum.(__)), ub=_convert(AT, maximum.(__)))
-        end
-    end
-
-rawu(x0::Type, v::OptArgs) = @p v.specs |> map(_intbound) |> map(mean)
-fromrawu(u, x0::Type, v::OptArgs) = @p map(_optic(_1) => _2, v.specs, u) |> construct(x0, __...)
-rawbounds(x0::Type, v::OptArgs, AT=nothing) =
-    if @p v.specs |> any(isnothing(_intbound(_)))
-        @assert @p v.specs |> all(isnothing(_intbound(_)))
-        return ()
-    else
-        @p let
-            v.specs
-            map(_intbound(_))
+            flatmap(fill(_intbound(_), AccessorsExtra.nvals_optic(x0, _optic(_))))
             (lb=_convert(AT, minimum.(__)), ub=_convert(AT, maximum.(__)))
         end
     end
