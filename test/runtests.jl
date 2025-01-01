@@ -13,7 +13,6 @@ end
     using StructArrays
     using StaticArrays
     using OptimizationOptimJL, OptimizationMetaheuristics
-    using ReverseDiff
     
     struct ExpModel{A,B}
         scale::A
