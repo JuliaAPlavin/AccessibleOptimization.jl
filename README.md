@@ -1,4 +1,9 @@
-# AccessibleOptimization.jl
+# AccessibleOptimization.jl – Deprecated
+
+Deprecated in favor of [AccessibleModels.jl](https://github.com/JuliaAPlavin/AccessibleModels.jl) (see also [discourse thread](https://discourse.julialang.org/t/accessiblemodels-jl-automatic-ui-and-model-fitting-for-arbitrary-objects/132363) and [mention in JuliaCon'2025 talk](https://www.youtube.com/watch?v=1NjovGpDbFk&t=2569)).
+
+
+# Documentation
 
 Combining `Accessors.jl` + `Optimization.jl` to enable function optimization with arbitrary structs. Vary struct parameters, combinations and transformations of them. Uniform and composable, zero overhead.
 
